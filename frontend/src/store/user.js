@@ -1,11 +1,24 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
+import axios from 'axios';
 
 const name = 'user';
 const initialState = {
   isLogin: false,
   user: null,
 };
+
+export const _loginThunk = createAsyncThunk(
+  'user/loginThunk',
+  async (body, thunkAPI) => {
+    try {
+      const res = await axios.post('/api/login', body);
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 
 const reducers = {
   _login(state, { payload: { userId, password } }) {
@@ -36,11 +49,11 @@ const userSlice = createSlice({
 });
 
 export const useUser = () => {
-  const { _login, _logout, _check } = userSlice.actions;
+  const { _logout, _check } = userSlice.actions;
   const dispatch = useDispatch();
 
   return {
-    login: (userId, password) => dispatch(_login({ userId, password })),
+    login: (userId, password) => dispatch(_loginThunk({ userId, password })),
     logout: () => dispatch(_logout()),
     loginCheck: () => dispatch(_check()),
   };

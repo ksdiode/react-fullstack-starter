@@ -11,7 +11,7 @@ app.use('/api', require('./api'));
 require('./database');
 
 // 웹서버 기동
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 app.listen(PORT, () =>
   console.log(`Server listening on port http://127.0.0.1:${PORT}/`)
 );

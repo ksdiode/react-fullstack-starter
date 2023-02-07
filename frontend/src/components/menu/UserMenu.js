@@ -49,7 +49,7 @@ function UserMenu() {
             <LoginIcon />
           </IconButton>
 
-          <IconButton color="inherit">
+          <IconButton color="inherit" component={Link} to="/signup">
             <PersonAddIcon />
           </IconButton>
         </>

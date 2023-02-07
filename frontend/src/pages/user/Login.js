@@ -9,12 +9,11 @@ import {
 } from '@mui/material';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import LoginIcon from '@mui/icons-material/Login';
-
-import useInput from '../hooks/input';
-import { useUser } from '../store/user';
+import useInput from '../../hooks/input';
+import { useUser } from '../../store/user';
 
 const Login = () => {
   const [userIdProps] = useInput('');
