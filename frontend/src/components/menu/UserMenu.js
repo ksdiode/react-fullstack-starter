@@ -6,7 +6,7 @@ import Menu from '@mui/material/Menu';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useUser } from '../../store/user';
 
@@ -27,19 +27,24 @@ function UserMenu() {
     setAnchorElUser(null);
   };
 
-  const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const { user } = useSelector((state) => state.user);
   const { logout } = useUser();
+  function handleLogout() {
+    logout();
+    navigate('/');
+  }
 
   return (
     <Box sx={{ flexGrow: 0 }}>
-      {user.isLogin ? (
+      {user ? (
         <>
           <Tooltip title="Open settings">
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
               <Avatar alt="Remy Sharp" src="/images/2.jpg" />
             </IconButton>
           </Tooltip>
-          <IconButton color="inherit" onClick={logout}>
+          <IconButton color="inherit" onClick={handleLogout}>
             <LogoutIcon />
           </IconButton>
         </>

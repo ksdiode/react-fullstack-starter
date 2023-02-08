@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
+import { buildExtraReducers } from './util';
 
 const name = 'user';
 const initialState = {
-  isLogin: false,
   user: null,
 };
 
@@ -12,32 +12,27 @@ export const _loginThunk = createAsyncThunk(
   'user/loginThunk',
   async (body, thunkAPI) => {
     try {
-      const res = await axios.post('/api/login', body);
-      return res.data;
+      const { data } = await axios.post('/api/auth/login', body); // isLogin, userId, token
+      localStorage.setItem('user', JSON.stringify(data));
+      return data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error);
+      if (error.response.data && error.response.data.reason)
+        return thunkAPI.rejectWithValue(error.response.data.reason);
+      else return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
 
 const reducers = {
-  _login(state, { payload: { userId, password } }) {
-    if (userId && password === '1234') {
-      state.isLogin = true;
-      localStorage.setItem('userId', userId);
-    }
-  },
-
   _logout(state) {
-    state.isLogin = false;
-    localStorage.removeItem('userId');
+    localStorage.removeItem('user');
+    state.user = null;
   },
 
   _check(state) {
-    const userId = localStorage.getItem('userId');
-    if (userId) {
-      state.isLogin = true;
-      state.user = userId;
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+      state.user = user;
     }
   },
 };
@@ -46,6 +41,7 @@ const userSlice = createSlice({
   name,
   initialState,
   reducers,
+  extraReducers: (builder) => buildExtraReducers(builder, 'user', _loginThunk),
 });
 
 export const useUser = () => {

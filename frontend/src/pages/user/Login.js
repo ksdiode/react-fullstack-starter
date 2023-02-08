@@ -16,19 +16,23 @@ import useInput from '../../hooks/input';
 import { useUser } from '../../store/user';
 
 const Login = () => {
-  const [userIdProps] = useInput('');
-  const [passwordProps] = useInput('');
+  const [userIdProps] = useInput('lee');
+  const [passwordProps] = useInput('1234');
 
   const navigate = useNavigate();
 
-  const { isLogin } = useSelector((state) => state.user);
+  const { user, error } = useSelector((state) => state.user);
   const { login } = useUser();
 
   useEffect(() => {
-    if (isLogin) {
-      navigate('/');
-    }
-  }, [isLogin]);
+    if (user) navigate('/');
+  }, [user, navigate]);
+
+  async function handleLogin() {
+    if (!userIdProps.value) return alert('userId를 입력하세요');
+    if (!passwordProps.value) return alert('비밀번호를 입력하세요');
+    login(userIdProps.value, passwordProps.value);
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -49,37 +53,36 @@ const Login = () => {
           로그인
         </Typography>
 
+        {error && (
+          <Typography color="error" sx={{ my: 3 }}>
+            {error}
+          </Typography>
+        )}
+
         <Box component="form" noValidate sx={{ mt: 1 }}>
           <TextField
             {...userIdProps}
             margin="normal"
-            required
             fullWidth
-            id="userId"
             label="user Id"
-            name="userId"
             autoFocus
           />
 
           <TextField
             {...passwordProps}
             margin="normal"
-            required
             fullWidth
-            name="password"
             label="Password"
             type="password"
-            id="password"
             autoComplete="current-password"
           />
 
           <Button
-            type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
             startIcon={<LoginIcon />}
-            onClick={() => login(userIdProps.value, passwordProps.value)}
+            onClick={handleLogin}
           >
             로그인
           </Button>

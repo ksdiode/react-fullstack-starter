@@ -40,7 +40,7 @@ UserSchema.statics = {
     let isLogin = user && (await user.comparePassword(password));
     if (isLogin) {
       const token = await user.getToken();
-      return { isLogin, token };
+      return { isLogin, userId: user.userId, token };
     } else {
       return {
         isLogin,
