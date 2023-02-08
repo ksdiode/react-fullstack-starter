@@ -8,7 +8,7 @@ function setInterceptors(instance) {
     (config) => {
       const { user } = store.getState();
       if (user.token) {
-        config.headers.Authorization = `jwt ${user.token}`;
+        config.headers.Authorization = user.token;
       }
       return config;
     },

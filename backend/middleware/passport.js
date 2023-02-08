@@ -4,7 +4,7 @@ const User = require('../models/user');
 
 const JWTConfig = {
   // jwt가 있는 헤더명 설정
-  jwtFromRequest: ExtractJwt.fromHeader('jwt'),
+  jwtFromRequest: ExtractJwt.fromHeader('Authorization'),
   secretOrKey: process.env.JWT_SECRET_KEY,
 };
 

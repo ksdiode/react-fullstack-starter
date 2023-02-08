@@ -52,7 +52,7 @@ const todoSlice = createSlice({
   initialState,
   reducers,
   extraReducers: (builder) =>
-    buildExtraReducers(builder, 'todos', _getTodosThunk),
+    buildExtraReducers(builder, _getTodosThunk, 'todos'),
 });
 
 export default todoSlice.reducer;

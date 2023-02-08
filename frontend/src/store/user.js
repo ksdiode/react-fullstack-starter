@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
-import { buildExtraReducers } from './util';
+import { buildExtraReducers, createThunk } from './util';
 import jwt_decode from 'jwt-decode';
 
 const name = 'user';
@@ -10,33 +10,42 @@ const initialState = {
   token: null,
 };
 
-export const _loginThunk = createAsyncThunk(
+export const _loginThunk = createThunk(
   'user/loginThunk',
-  async (body, thunkAPI) => {
-    try {
-      const { data } = await axios.post('/api/auth/login', body); // isLogin, userId, token
-      return data;
-    } catch (error) {
-      if (error.response.data && error.response.data.reason)
-        return thunkAPI.rejectWithValue(error.response.data.reason);
-      else return thunkAPI.rejectWithValue(error.message);
-    }
-  }
+  async (body) => await axios.post('/api/auth/login', body)
+);
+export const _signupThunk = createThunk(
+  'user/signupThunk',
+  async (body) => await axios.post('/api/auth/signup', body)
 );
 
-export const _signupThunk = createAsyncThunk(
-  'user/signupThunk',
-  async (body, thunkAPI) => {
-    try {
-      const { data } = await axios.post('/api/auth/signup', body); // isLogin, userId, token
-      return data;
-    } catch (error) {
-      if (error.response.data && error.response.data.reason)
-        return thunkAPI.rejectWithValue(error.response.data.reason);
-      else return thunkAPI.rejectWithValue(error.message);
-    }
-  }
-);
+// export const _loginThunk = createAsyncThunk(
+//   'user/loginThunk',
+//   async (body, thunkAPI) => {
+//     try {
+//       const { data } = await axios.post('/api/auth/login', body); // isLogin, userId, token
+//       return data;
+//     } catch (error) {
+//       if (error.response.data && error.response.data.reason)
+//         return thunkAPI.rejectWithValue(error.response.data.reason);
+//       else return thunkAPI.rejectWithValue(error.message);
+//     }
+//   }
+// );
+
+// export const _signupThunk = createAsyncThunk(
+//   'user/signupThunk',
+//   async (body, thunkAPI) => {
+//     try {
+//       const { data } = await axios.post('/api/auth/signup', body); // isLogin, userId, token
+//       return data;
+//     } catch (error) {
+//       if (error.response.data && error.response.data.reason)
+//         return thunkAPI.rejectWithValue(error.response.data.reason);
+//       else return thunkAPI.rejectWithValue(error.message);
+//     }
+//   }
+// );
 
 const reducers = {
   _logout(state) {
@@ -61,12 +70,12 @@ const userSlice = createSlice({
   initialState,
   reducers,
   extraReducers: (builder) => {
-    buildExtraReducers(builder, 'user', _loginThunk, (state, payload) => {
+    buildExtraReducers(builder, _loginThunk, (state, payload) => {
       localStorage.setItem('user', JSON.stringify(payload));
       state.userId = payload.userId;
       state.token = payload.token;
     });
-    buildExtraReducers(builder, '', _signupThunk);
+    buildExtraReducers(builder, _signupThunk);
   },
 });
 
