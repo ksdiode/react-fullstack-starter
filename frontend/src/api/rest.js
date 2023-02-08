@@ -6,26 +6,30 @@ function createRestThunk(type, base) {
     `${type}/getList`,
     async (params) => await api.get(base, { params })
   );
-  const get = createThunk(
-    `${type}/get`,
+
+  const getOne = createThunk(
+    `${type}/getOne`,
     async (id) => await api.get(`${base}/${id}`)
   );
+
   const create = createThunk(
-    `${type}/getList`,
+    `${type}/create`,
     async (body) => await api.post(base, body)
   );
+
   const update = createThunk(
-    `${type}/get`,
+    `${type}/update`,
     async (body) => await api.put(`${base}/${body.id}`, body)
   );
+
   const remove = createThunk(
-    `${type}/get`,
+    `${type}/remove`,
     async (id) => await api.delete(`${base}/${id}`)
   );
 
   return {
     getList,
-    get,
+    getOne,
     create,
     update,
     remove,

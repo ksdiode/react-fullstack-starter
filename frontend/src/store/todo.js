@@ -53,7 +53,7 @@ const _getTodosThunk = createThunk(
   async () => await axios.get('http://localhost:4000/todos')
 );
 
-const todoRest = createRestThunk('http://localhost:4000/todos');
+const todoRest = createRestThunk('todo', 'http://localhost:4000/todos');
 
 const todoSlice = createSlice({
   name,
