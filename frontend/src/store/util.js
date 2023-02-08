@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import api from '../api';
 
 export async function asyncTimeout(delay) {
   return new Promise((resolve, reject) => {
@@ -29,6 +30,7 @@ export function createThunk(type, fn) {
   return createAsyncThunk(type, async (body, thunkAPI) => {
     try {
       const { data } = fn(body);
+
       return data;
     } catch (error) {
       const message = error.response.data ? error.response.data : error.message;

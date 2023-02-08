@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { buildExtraReducers } from './util';
+import createRestThunk from '../api/rest';
+import { buildExtraReducers, createThunk } from './util';
 
 const name = 'todo';
 
@@ -35,17 +36,24 @@ const reducers = {
   },
 };
 
-export const _getTodosThunk = createAsyncThunk(
+// const _getTodosThunk = createAsyncThunk(
+//   'todo/getTodosThunk',
+//   async (thunkAPI) => {
+//     try {
+//       const res = await axios.get('http://localhost:4000/todos');
+//       return res.data; // action의 payload가 됨
+//     } catch (error) {
+//       return thunkAPI.rejectWithValue(error);
+//     }
+//   }
+// );
+
+const _getTodosThunk = createThunk(
   'todo/getTodosThunk',
-  async (thunkAPI) => {
-    try {
-      const res = await axios.get('http://localhost:4000/todos');
-      return res.data; // action의 payload가 됨
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
-  }
+  async () => await axios.get('http://localhost:4000/todos')
 );
+
+const todoRest = createRestThunk('http://localhost:4000/todos');
 
 const todoSlice = createSlice({
   name,
@@ -62,6 +70,8 @@ export const useTodo = () => {
   const dispatch = useDispatch();
 
   return {
+    getList: () => dispatch(todoRest.getList()),
+
     getTodos: () => dispatch(_getTodosThunk()),
     setTodo: (todo) => dispatch(_setTodo(todo)),
     addTodo: (todo) => dispatch(_addTodo(todo)),
