@@ -21,12 +21,12 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const { user, error } = useSelector((state) => state.user);
+  const { userId, error } = useSelector((state) => state.user);
   const { login } = useUser();
 
   useEffect(() => {
-    if (user) navigate('/');
-  }, [user, navigate]);
+    if (userId) navigate('/');
+  }, [userId, navigate]);
 
   async function handleLogin() {
     if (!userIdProps.value) return alert('userId를 입력하세요');

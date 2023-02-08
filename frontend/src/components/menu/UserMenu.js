@@ -13,7 +13,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 function UserMenu() {
   const navigate = useNavigate();
-  const { user } = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user);
   const { logout } = useUser();
   function handleLogout() {
     logout();
@@ -22,7 +22,7 @@ function UserMenu() {
 
   return (
     <Box sx={{ flexGrow: 0 }}>
-      {user ? (
+      {user.userId ? (
         <>
           <IconButton onClick={() => navigate('/mypage')} sx={{ p: 0 }}>
             <Avatar alt="Remy Sharp" src="/images/2.jpg" />

@@ -10,6 +10,7 @@ import MyAppBar from './components/menu/MyAppBar';
 import BlogList from './pages/blog/BlogList';
 import Signup from './pages/user/Signup';
 import MyPage from './pages/user/MyPage';
+import axios from './api';
 
 function App() {
   const { loginCheck } = useUser();

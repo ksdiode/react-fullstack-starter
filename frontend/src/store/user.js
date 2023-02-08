@@ -2,10 +2,12 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { buildExtraReducers } from './util';
+import jwt_decode from 'jwt-decode';
 
 const name = 'user';
 const initialState = {
-  user: null,
+  userId: null,
+  token: null,
 };
 
 export const _loginThunk = createAsyncThunk(
@@ -13,7 +15,6 @@ export const _loginThunk = createAsyncThunk(
   async (body, thunkAPI) => {
     try {
       const { data } = await axios.post('/api/auth/login', body); // isLogin, userId, token
-      localStorage.setItem('user', JSON.stringify(data));
       return data;
     } catch (error) {
       if (error.response.data && error.response.data.reason)
@@ -22,6 +23,7 @@ export const _loginThunk = createAsyncThunk(
     }
   }
 );
+
 export const _signupThunk = createAsyncThunk(
   'user/signupThunk',
   async (body, thunkAPI) => {
@@ -35,17 +37,21 @@ export const _signupThunk = createAsyncThunk(
     }
   }
 );
+
 const reducers = {
   _logout(state) {
+    console.log('logout');
     localStorage.removeItem('user');
-    state.user = null;
+    state.userId = null;
+    state.token = null;
   },
 
   _check(state) {
     const user = JSON.parse(localStorage.getItem('user'));
-    console.log(user);
     if (user) {
-      state.user = user;
+      const token = jwt_decode(user.token);
+      state.userId = user.userId;
+      state.token = user.token;
     }
   },
 };
@@ -55,7 +61,11 @@ const userSlice = createSlice({
   initialState,
   reducers,
   extraReducers: (builder) => {
-    buildExtraReducers(builder, 'user', _loginThunk);
+    buildExtraReducers(builder, 'user', _loginThunk, (state, payload) => {
+      localStorage.setItem('user', JSON.stringify(payload));
+      state.userId = payload.userId;
+      state.token = payload.token;
+    });
     buildExtraReducers(builder, '', _signupThunk);
   },
 });

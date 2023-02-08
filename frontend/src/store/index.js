@@ -17,8 +17,9 @@ const store = configureStore({
       serializableCheck: false,
     }),
 });
-const StoreProvider = ({ children }) => (
+
+export const StoreProvider = ({ children }) => (
   <Provider store={store}>{children}</Provider>
 );
 
-export default StoreProvider;
+export default store;
