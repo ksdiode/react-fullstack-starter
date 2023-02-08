@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const saltRounds = 10;
 
@@ -59,6 +60,8 @@ UserSchema.pre('save', function (next) {
     next();
   }
 });
+
+UserSchema.plugin(mongoosePaginate);
 
 const User = mongoose.model('User ', UserSchema);
 module.exports = User;

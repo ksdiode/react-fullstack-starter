@@ -61,4 +61,4 @@ function createService(Model) {
   };
 }
 
-export default createService;
+module.exports = createService;

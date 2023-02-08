@@ -46,30 +46,3 @@ exports.remove = async function (req, res) {
     res.status(404).json(e);
   }
 };
-
-async function tryDo(f) {
-  try {
-    const data = await f();
-    res.json(data);
-  } catch (e) {
-    res.status(404).json(e);
-  }
-}
-
-function createService(Model) {
-  return {
-    async getList(req, res) {
-      tryDo(async (req, res) => {
-        const { page = 1 } = req.query;
-        const option = { page };
-        let todos = await Todo.paginate(option);
-      });
-    },
-    async getOne(req, res) {
-      tryDo(async (req, res) => {
-        const { _id } = req.params;
-        const todo = await Todo.findByIdAndUpdate(_id, req.body, { new: true });
-      });
-    },
-  };
-}
