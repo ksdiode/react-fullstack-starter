@@ -53,7 +53,7 @@ UserSchema.statics = {
 UserSchema.pre('save', function (next) {
   if (this.isModified('password')) {
     const salt = bcrypt.genSaltSync(saltRounds);
-    this.password = bcrypt.hash(this.password, salt);
+    this.password = bcrypt.hashSync(this.password, salt);
     next();
   } else {
     next();

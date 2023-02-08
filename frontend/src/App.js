@@ -9,6 +9,7 @@ import { useUser } from './store/user';
 import MyAppBar from './components/menu/MyAppBar';
 import BlogList from './pages/blog/BlogList';
 import Signup from './pages/user/Signup';
+import MyPage from './pages/user/MyPage';
 
 function App() {
   const { loginCheck } = useUser();
@@ -25,6 +26,7 @@ function App() {
           <Route path="/" exact element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/mypage" element={<MyPage />} />
           <Route path="/todo" element={<Todo />} />
           <Route path="/blog" element={<BlogList />} />
         </Routes>

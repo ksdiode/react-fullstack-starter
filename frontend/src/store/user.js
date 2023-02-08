@@ -22,7 +22,19 @@ export const _loginThunk = createAsyncThunk(
     }
   }
 );
-
+export const _signupThunk = createAsyncThunk(
+  'user/signupThunk',
+  async (body, thunkAPI) => {
+    try {
+      const { data } = await axios.post('/api/auth/signup', body); // isLogin, userId, token
+      return data;
+    } catch (error) {
+      if (error.response.data && error.response.data.reason)
+        return thunkAPI.rejectWithValue(error.response.data.reason);
+      else return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
 const reducers = {
   _logout(state) {
     localStorage.removeItem('user');
@@ -31,6 +43,7 @@ const reducers = {
 
   _check(state) {
     const user = JSON.parse(localStorage.getItem('user'));
+    console.log(user);
     if (user) {
       state.user = user;
     }
@@ -41,7 +54,10 @@ const userSlice = createSlice({
   name,
   initialState,
   reducers,
-  extraReducers: (builder) => buildExtraReducers(builder, 'user', _loginThunk),
+  extraReducers: (builder) => {
+    buildExtraReducers(builder, 'user', _loginThunk);
+    buildExtraReducers(builder, '', _signupThunk);
+  },
 });
 
 export const useUser = () => {
@@ -49,7 +65,10 @@ export const useUser = () => {
   const dispatch = useDispatch();
 
   return {
-    login: (userId, password) => dispatch(_loginThunk({ userId, password })),
+    login: async (userId, password) =>
+      dispatch(_loginThunk({ userId, password })),
+    signup: async (userId, password) =>
+      dispatch(_signupThunk({ userId, password })),
     logout: () => dispatch(_logout()),
     loginCheck: () => dispatch(_check()),
   };

@@ -8,9 +8,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 import useInput from '../../hooks/input';
@@ -20,6 +18,26 @@ const Signup = () => {
   const [userIdProps] = useInput('');
   const [passwordProps] = useInput('');
   const [confirmPpasswordProps] = useInput('');
+  const { signup } = useUser();
+  const navigate = useNavigate();
+
+  async function handleSignup() {
+    if (!userIdProps.value) return alert('사용자 Id를 입력하세요.');
+    if (!passwordProps.value) return alert('비밀번호를 입력하세요.');
+    if (!confirmPpasswordProps.value)
+      return alert('비밀번호 확인을 입력하세요.');
+    if (passwordProps.value !== confirmPpasswordProps.value) {
+      return alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+    }
+    const { payload: res } = await signup(
+      userIdProps.value,
+      passwordProps.value
+    );
+    console.log('------------->', res);
+    if (res.result === 'ok') {
+      // navigate('/');
+    }
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -44,18 +62,14 @@ const Signup = () => {
           <TextField
             {...userIdProps}
             margin="normal"
-            required
             fullWidth
-            id="userId"
             label="user Id"
-            name="userId"
             autoFocus
           />
 
           <TextField
             {...passwordProps}
             margin="normal"
-            required
             fullWidth
             label="비밀번호"
             type="password"
@@ -64,18 +78,17 @@ const Signup = () => {
           <TextField
             {...confirmPpasswordProps}
             margin="normal"
-            required
             fullWidth
             label="비밀번화 확인"
             type="password"
             autoComplete="current-password"
           />
           <Button
-            type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
             startIcon={<PersonAddIcon />}
+            onClick={handleSignup}
           >
             가입
           </Button>

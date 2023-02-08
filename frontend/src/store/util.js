@@ -6,19 +6,17 @@ export async function asyncTimeout(delay) {
   });
 }
 
-export function buildExtraReducers(builder, field, ...asyncActions) {
-  asyncActions.forEach((action) => {
-    builder
-      .addCase(action.pending, (state, action) => {
-        state.loading = true;
-      })
-      .addCase(action.fulfilled, (state, action) => {
-        state.loading = false;
-        state[field] = action.payload;
-      })
-      .addCase(action.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
-  });
+export function buildExtraReducers(builder, field, asyncAction) {
+  builder
+    .addCase(asyncAction.pending, (state, action) => {
+      state.loading = true;
+    })
+    .addCase(asyncAction.fulfilled, (state, action) => {
+      state.loading = false;
+      if (field !== '') state[field] = action.payload;
+    })
+    .addCase(asyncAction.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
 }
