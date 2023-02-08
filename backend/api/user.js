@@ -3,14 +3,15 @@ const User = require('../models/user');
 const passport = require('passport');
 const createService = require('../controller');
 
-const { getPage, getOne, create, update, remove } = createService(User);
+const service = createService(User, { select: 'userId updatedAt' });
+const auth = passport.authenticate('jwt', { session: false });
 
 router
-  .get('/', getPage)
-  .get('/:_id', getOne)
-  .post('/', passport.authenticate('jwt', { session: false }), create)
-  .put('/:_id', passport.authenticate('jwt', { session: false }), update)
-  .delete('/:_id', passport.authenticate('jwt', { session: false }), remove);
+  .get('/', service.getPage)
+  .get('/:_id', service.getOne)
+  .post('/', auth, service.create)
+  .put('/:_id', auth, service.update)
+  .delete('/:_id', auth, service.remove);
 
 // router.get('/', async (req, res) => {
 //   const users = await User.find();

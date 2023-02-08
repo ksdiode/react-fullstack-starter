@@ -7,27 +7,15 @@ async function tryDo(res, f) {
   }
 }
 
-function createService(Model) {
+function createService(Model, options) {
   return {
     async getPage(req, res) {
       tryDo(res, async () => {
         const filter = req.query;
         delete filter.page;
         const { page = 1 } = req.query;
-        const options = { page };
+        options = { ...options, page };
         return await Model.paginate(filter, options);
-        // Model.paginate({}, options, function (err, result) {
-        //   result.docs
-        //   result.totalDocs = 100
-        //   result.limit = 10
-        //   result.page = 1
-        //   result.totalPages = 10
-        //   result.hasNextPage = true
-        //   result.nextPage = 2
-        //   result.hasPrevPage = false
-        //   result.prevPage = null
-        //   result.pagingCounter = 1
-        // });
       });
     },
 

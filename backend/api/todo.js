@@ -3,13 +3,14 @@ const passport = require('passport');
 const createService = require('../controller');
 const Todo = require('../models/todo');
 
-const { getPage, getOne, create, update, remove } = createService(Todo);
+const service = createService(Todo);
+const auth = passport.authenticate('jwt', { session: false });
 
 router
-  .get('/', getPage)
-  .get('/:_id', getOne)
-  .post('/', passport.authenticate('jwt', { session: false }), create)
-  .put('/:_id', passport.authenticate('jwt', { session: false }), update)
-  .delete('/:_id', passport.authenticate('jwt', { session: false }), remove);
+  .get('/', service.getPage)
+  .get('/:_id', service.getOne)
+  .post('/', auth, service.create)
+  .put('/:_id', auth, service.update)
+  .delete('/:_id', auth, service.remove);
 
 module.exports = router;
