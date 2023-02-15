@@ -1,4 +1,5 @@
 require('dotenv').config();
+const fs = require('fs');
 const express = require('express');
 const setMiddleware = require('./middleware');
 
@@ -12,6 +13,10 @@ require('./database');
 
 // 웹서버 기동
 const PORT = process.env.PORT || 8000;
-app.listen(PORT, () =>
-  console.log(`Server listening on port http://127.0.0.1:${PORT}/`)
-);
+app.listen(PORT, () => {
+  if (!fs.existsSync(process.env.UPLOAD_DIR)) {
+    fs.mkdirSync(process.env.UPLOAD_DIR);
+  }
+
+  console.log(`Server listening on port http://127.0.0.1:${PORT}/`);
+});
