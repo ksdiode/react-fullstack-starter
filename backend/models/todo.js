@@ -5,6 +5,7 @@ const todoSchema = mongoose.Schema(
   {
     title: String,
     done: { type: Boolean, default: false },
+    author: { type: Schema.ObjectId, ref: 'User' },
   },
   { timestamps: true }
 );

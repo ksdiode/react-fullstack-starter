@@ -7,15 +7,15 @@ async function tryDo(res, f) {
   }
 }
 
-function createService(Model, options) {
+function createService(Model, paginationOptions) {
   return {
     async getPage(req, res) {
       tryDo(res, async () => {
         const filter = req.query;
         delete filter.page;
         const { page = 1 } = req.query;
-        options = { ...options, page };
-        return await Model.paginate(filter, options);
+        paginationOptions = { ...paginationOptions, page };
+        return await Model.paginate(filter, paginationOptions);
       });
     },
 
