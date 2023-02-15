@@ -18,5 +18,5 @@ app.listen(PORT, () => {
     fs.mkdirSync(process.env.UPLOAD_DIR);
   }
 
-  console.log(`Server listening on port http://127.0.0.1:${PORT}/`);
+  console.log(`서비 기동 http://127.0.0.1:${PORT}/`);
 });
